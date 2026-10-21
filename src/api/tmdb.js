@@ -66,9 +66,11 @@ export async function getNowPlaying(pages = 3) {
 
 // "หนังทั้งหมดที่แอปใช้" โหลดจริงวันละครั้ง ที่เหลืออ่านจาก localStorage
 // หน้า Movies และหน้าแรกเรียกตัวนี้ จึงแชร์ข้อมูลชุดเดียวกัน
+const API = process.env.REACT_APP_API_URL || '';
+
 export function getMovies() {
   return onceADay(CACHE_KEY, async () => {
-    const res = await fetch('/api/movies');
+    const res = await fetch(API + '/api/movies');
 
     if (!res.ok) {
       throw new Error(`โหลดหนังไม่สำเร็จ ${res.status}`);

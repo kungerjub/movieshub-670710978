@@ -3,6 +3,8 @@
 
 // '' = origin เดียวกับหน้าเว็บ CRA จะ proxy /api ไปที่ http://localhost:4000 ให้ (ตั้งใน package.json)
 // ตอนต่อ Go จริง ตั้ง REACT_APP_API_URL=https://api.ทีมเรา.xyz ใน .env และบน Vercel
+
+
 const BASE = process.env.REACT_APP_API_URL || '';
 
 // ฟังก์ชันเดียวที่ fetch จริง ทุกฟังก์ชันด้านล่างเรียกผ่านตัวนี้
@@ -30,11 +32,11 @@ export async function apiFetch(path, { method = 'GET', body, token } = {}) {
   }
 
   // 4. อ่าน JSON
-  const data = await res.json();
+  const data = await res.json().catch(() => null);
 
   // ถ้า server ตอบ error เช่น 400, 401, 404, 500
   if (!res.ok) {
-    const err = new Error(data.error || 'เกิดข้อผิดพลาด');
+    const err = new Error(data.error?.message ?? data.error ?? `server ตอบกลับ ${res.status}`);
     err.status = res.status;
     throw err;
   }
@@ -81,4 +83,34 @@ export function removeFromWishlist(movieId, token) {
 export async function getMovies() {
   const data = await apiFetch('/api/movies');
   return data.items;
+}
+
+// ---------- แนวหนัง (สาธารณะ ใช้ทำ dropdown ในฟอร์มหลังบ้าน) ----------
+export async function getGenres() {
+  const data = await apiFetch('/api/genres');
+  return data.items;                                      // [{ id, nameEn, nameTh }]
+}
+
+// ---------- หลังบ้าน (ทุกตัวต้องแนบ token ของ admin ถ้าเป็น member Go ตอบ 403) ----------
+export function getAdminStats(token) {
+  return apiFetch('/api/admin/stats', { token });
+}
+export async function getAdminMembers(token) {
+  const data = await apiFetch('/api/admin/members', { token });
+  return data.items;
+}
+export function setMemberRole(memberId, role, token) {
+  return apiFetch(`/api/admin/members/${memberId}/role`, { method: 'PUT', body: { role }, token });
+}
+export function getAdminMovie(movieId, token) {
+  return apiFetch(`/api/admin/movies/${movieId}`, { token });
+}
+export function createMovie(fields, token) {
+  return apiFetch('/api/admin/movies', { method: 'POST', body: fields, token });
+}
+export function updateMovie(movieId, fields, token) {
+  return apiFetch(`/api/admin/movies/${movieId}`, { method: 'PUT', body: fields, token });
+}
+export function deleteMovie(movieId, token) {
+  return apiFetch(`/api/admin/movies/${movieId}`, { method: 'DELETE', token });       // 204 ได้ null
 }

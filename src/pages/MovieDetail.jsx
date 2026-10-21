@@ -14,7 +14,7 @@ function MovieDetail() {
   const [status, setStatus] = useState('loading');
   const [error, setError] = useState(null);
   const [reviews, setReviews] = useState([]);       // รีวิวจาก backend ของเรา (ไม่ใช่ TMDB)
-  const { isLoggedIn, token, member } = useAuth();                 // TODO ขั้นที่ 3: ดึง token และ member มาด้วย
+  const { isLoggedIn, token } = useAuth();                 // TODO ขั้นที่ 3: ดึง token และ member มาด้วย
 
 
   useEffect(() => {

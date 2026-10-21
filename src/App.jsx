@@ -13,6 +13,12 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Wishlist from './pages/Wishlist';
 import NotFound from './pages/NotFound';
+import RequireRole from './components/RequireRole';
+import AdminLayout from './pages/admin/AdminLayout';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import AdminMovies from './pages/admin/AdminMovies';
+import AdminMovieForm from './pages/admin/AdminMovieForm';
+import AdminMembers from './pages/admin/AdminMembers';
 
 function App() {
   return (
@@ -29,8 +35,24 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/me/wishlist" element={<ProtectedRoute><Wishlist /></ProtectedRoute>} />
+            {/* หลังบ้าน: ครอบทั้งกิ่งด้วย RequireRole ครั้งเดียว หน้าลูกทุกหน้าได้รับการป้องกันหมด */}
+            <Route path="/admin" element={<RequireRole role="admin"><AdminLayout /></RequireRole>}>
+              <Route index element={<AdminDashboard />} />
+              <Route path="movies" element={<AdminMovies />} />
+              <Route path="movies/new" element={<AdminMovieForm />} />
+              <Route path="movies/:id" element={<AdminMovieForm />} />
+              <Route path="members" element={<AdminMembers />} />
+            </Route>
             <Route path="/lab" element={<ApiLab />} />
             <Route path="/about" element={<About />} />
+            <Route
+              path="/admin"
+              element={
+                <RequireRole role="admin">
+                  <div className="px-4 py-10 text-center">หลังบ้าน</div>
+                </RequireRole>
+              }
+            />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
