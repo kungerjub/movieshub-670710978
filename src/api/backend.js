@@ -36,7 +36,8 @@ export async function apiFetch(path, { method = 'GET', body, token } = {}) {
 
   // ถ้า server ตอบ error เช่น 400, 401, 404, 500
   if (!res.ok) {
-    const err = new Error(data.error?.message ?? data.error ?? `server ตอบกลับ ${res.status}`);
+    // แก้แล้ว: ใช้ data?.error เพราะ data อาจเป็น null (เช่น 404 ที่ไม่ใช่ JSON)
+    const err = new Error(data?.error?.message ?? data?.error ?? `server ตอบกลับ ${res.status}`);
     err.status = res.status;
     throw err;
   }
