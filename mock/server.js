@@ -170,5 +170,5 @@ app.use('/api', (req, res) => res.status(404).json({ error: `ไม่มี end
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`MovieHub mock backend พร้อมที่ http://localhost:${PORT}`);
-  console.log('บัญชีทดลอง: demo@moviehub.test / 1234   (ข้อมูลทั้งหมดหายเมื่อปิด)');
+  console.log('บัญชีทดลอง: betatester123@test.com / 12345678   (ข้อมูลทั้งหมดหายเมื่อปิด)');
 });
